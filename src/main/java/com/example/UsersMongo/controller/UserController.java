@@ -43,16 +43,16 @@ public class UserController {
     }
 
     @PostMapping("/api/login")
-    public HttpStatus login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
         // Find the user by email
-        Users passenger = repo.findByEmail(loginRequest.getEmail());
-
-        if (passenger != null && passenger.getPassword().equals(loginRequest.getPassword())) {
-
-            return HttpStatus.OK;
+        Users user = repo.findByEmail(loginRequest.getEmail());
+    
+        if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
+            // Login success
+            return ResponseEntity.ok("Login successful");
         } else {
-            // Invalid email or password
-            return HttpStatus.UNAUTHORIZED;
+            // Invalid credentials
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
 
